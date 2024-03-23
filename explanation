@@ -1,0 +1,42 @@
+Good example:
+https://cmps-people.ok.ubc.ca/jbobowsk/Python/html/Jupyter%20Second%20Order%20ODEs.html
+
+Explanation for elements:
+
+angle, velocity = odeint(q_derivatives, [0, 1], time).T
+
+1.
+odeint: This is a function used for solving ordinary differential equations (ODEs) numerically. It stands for "ordinary differential equation integration". The odeint function typically takes three arguments: a function defining the derivatives of the variables, initial conditions, and an array representing time points at which to solve the ODEs.
+
+2. q_derivatives: This is the function defining the derivatives of the variables. In mathematical terms, if you have an ODE system like dx/dt = f(x, t), where x is a vector of variables, q_derivatives is the function representing f(x, t).
+
+3.[0, 1]: This is the initial condition for the ODEs. It's a list or array representing the initial values of the variables. In this case, it seems to represent the initial angle and velocity.
+
+4.time: This is an array representing the time points at which to solve the ODEs. The ODE solver will calculate the values of the variables (angle and velocity) at each of these time points.
+
+5..T: This is the transpose method. It transposes the result of odeint, swapping rows and columns. In this case, it's likely used because odeint returns an array where each row corresponds to a different variable (in this case, angle and velocity) at each time point. By transposing the array, we get two arrays, one for angle and one for velocity, where each array contains the values of that variable over time.
+
+6.angle, velocity: These are the variables to which the results of odeint are assigned. After transposing, the first variable (angle) will contain the values of the angle over time, and the second variable (velocity) will contain the values of the velocity over time.
+
+time = np.arange(0, 10, 1)
+
+1.np: This likely refers to the NumPy library, which is a popular Python library used for numerical computing. It provides support for large, multi-dimensional arrays and matrices, along with a collection of mathematical functions to operate on these arrays.
+
+2. arange: This is a function provided by NumPy for creating arrays with regularly spaced values. It is similar to the built-in range function in Python but returns an array instead of a list.
+
+3.(0, 10, 1): These are the arguments passed to the arange function. They specify the start, stop, and step values for generating the array. Here's what each argument means:
+
+	0: Start value of the array. In this case, the array starts at 0.
+
+	10: Stop value of the array. The array will not include this value. In this case, the array stops at 10, but does not include 10 itself.
+
+	1: Step size between each value in the array. In this case, it's 1, so the array will include every integer from 0 up to (but not including) 10.
+
+
+
+
+
+
+
+
+ 
