@@ -6,23 +6,24 @@ import math
 import matplotlib.pyplot as plt
 from scipy.integrate import odeint
 
-d=3.14
-n=0.13 #viskozitāte
-r=0.003 # rādiuss
+pi=3.14
+n=0.13 # šķīduma viskozitāte
+r=0.003 #  objekta rādiuss
 b= 0.001 # lauka stiprums
-p=1100 # blīvums
-m=0.02 # moments
-y = 8*d**n*(r**3)
+q =1100 #  šķīduma blīvums
+M=0.02 # magnētiskais moments
+y = 8*pi*n*(r**3) # Rotācijas berzes koeficients
+I=2 # Inerces moments
 
 def q_derivatives(z,t):
-    return [z[1], (y)*z[1] - m*b*np.sin(z[0])]
+    return [z[1], ((y)*z[1] - M*b*np.sin(z[0]))]
 
-time = np.arange(0, 6, 1e-3)
+time = np.arange(0, 10000, 1)
 
-angle, sth = odeint(q_derivatives, [2e-3, 0], time).T 
+angle, velocity = odeint(q_derivatives, [0.1, 0], time).T 
 
-plt.plot(time, angle, 'orange', linewidth = 2)
+plt.plot(time, angle , 'orange', linewidth = 2)
 plt.xlabel('time (s)')
-plt.ylabel('position (cm)')
+plt.ylabel('Angle(rad)')
 plt.ticklabel_format(style='sci', axis='x', scilimits=(0,0))
 plt.grid(True)
