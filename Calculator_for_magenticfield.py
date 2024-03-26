@@ -14,16 +14,15 @@ q =1100 #  šķīduma blīvums
 M=0.02 # magnētiskais moments
 y = 8*pi*n*(r**3) # Rotācijas berzes koeficients
 I=2 # Inerces moments
-W= 2 # magn\etiskā lauka kustības ātrums
+W=10000
 
 def q_derivatives(z,t):
-    return [z[1], ((1*I)*((y)*z[1] - M*b*np.sin(z[0])))] # diferiencālvienādojums īsajā formā
+    return [z[1], ((1/1)*(-(y)*(z[1]+W) - M*b*np.sin(z[0]) ))]
 
-time = np.arange(0, 10000, 1) # laika sakārtojums
+time = np.arange(0, 1000000, 1)
 
-angle, velocity = odeint(q_derivatives, [0.1, 0], time).T # Sākotnējie parametri
+angle, velocity = odeint(q_derivatives, [0.1, 0], time).T 
 
-# Apraksts grafikam
 plt.plot(time, angle , 'orange', linewidth = 2)
 plt.xlabel('time (s)')
 plt.ylabel('Angle(rad)')
