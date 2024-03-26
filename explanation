@@ -1,6 +1,8 @@
 Good example:
 https://cmps-people.ok.ubc.ca/jbobowsk/Python/html/Jupyter%20Second%20Order%20ODEs.html
 
+https://jupyter.org/try-jupyter/lab/
+
 Explanation for elements:
 
 angle, velocity = odeint(q_derivatives, [0, 1], time).T
