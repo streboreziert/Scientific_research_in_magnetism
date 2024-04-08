@@ -6,7 +6,7 @@ M=0.02
 B=0.001 
 y = 8*pi*n*(r**3)
 
-WI=(15*η)/(q*r*r)
+WI=(q*r*r)/(15*η)
 WC=(M*B)/y
 
 print("WI:"WI)
