@@ -1,0 +1,61 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+from scipy.constants import pi
+
+# Parametri
+eta = 1.4  # Glicerīna viskozitāte Pa·s
+R = 3e-3  # Rādiuss 3 mm
+B = 1e-3  # Magnētiskā lauka intensitāte 1 mT
+m = 0.02  # Magnētiskais moments A·m^2
+
+# Funkcija, kas aprēķina berzes koeficientu gamma un kritisko frekvenci omega_c
+def calculate_gamma(eta, R):
+    return 8 * pi * eta * R**3
+
+gamma = calculate_gamma(eta, R)
+omega_c = B / gamma
+
+# Diferenciālvienādojums leņķim theta
+def dtheta_dt(t, theta, omega_0, omega_c):
+    return omega_0 - omega_c * np.sin(theta)
+
+# Gadījumi
+omega_0_case1 = 0.5 * omega_c  # Gadījums, kad omega_0 < omega_c
+omega_0_case2 = omega_c        # Gadījums, kad omega_0 = omega_c
+omega_0_case3 = 1.5 * omega_c  # Gadījums, kad omega_0 > omega_c
+
+# Mazāks laika intervāls, lai redzētu sākuma izmaiņas
+t_span = (0, 0.01)  # Pirmajā sekundē
+initial_theta = [0.01]
+
+# Atrisināt vienādojumu katram gadījumam
+sol_case1 = solve_ivp(dtheta_dt, t_span, initial_theta, args=(omega_0_case1, omega_c), dense_output=True)
+sol_case2 = solve_ivp(dtheta_dt, t_span, initial_theta, args=(omega_0_case2, omega_c), dense_output=True)
+sol_case3 = solve_ivp(dtheta_dt, t_span, initial_theta, args=(omega_0_case3, omega_c), dense_output=True)
+
+# Izveidot laika punktus rezultātu attēlošanai
+t = np.linspace(t_span[0], t_span[1], 300)
+theta_case1 = sol_case1.sol(t)[0]
+theta_case2 = sol_case2.sol(t)[0]
+theta_case3 = sol_case3.sol(t)[0]
+
+# Grafiks
+plt.figure(figsize=(12, 6))
+
+# Gadījums, kad omega_0 < omega_c
+plt.plot(t, theta_case1, label=r'$\omega_0 < \omega_c$', color='b')
+
+# Gadījums, kad omega_0 = omega_c
+plt.plot(t, theta_case2, label=r'$\omega_0 = \omega_c$', color='g')
+
+# Gadījums, kad omega_0 > omega_c
+plt.plot(t, theta_case3, label=r'$\omega_0 > \omega_c$', color='r')
+
+# Asu etiķetes un nosaukums
+plt.xlabel('Laiks $t$')
+plt.ylabel('Leņķis $\\vartheta(t)$')
+plt.title('Leņķa $\\vartheta(t)$ attīstība sākumā (pirmajā sekundē)')
+plt.legend()
+plt.grid()
+plt.show()
