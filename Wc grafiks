@@ -1,0 +1,48 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+from scipy.constants import pi
+
+# Given values
+eta_values = np.linspace(1e-3, 1.4, 100)  # viscosity in Pa·s from 1 mPa·s to 1.4 Pa·s
+R_values = np.linspace(3e-3, 1e-2, 100)  # radius in meters from 3 mm to 10 mm
+B_max = 1e-3  # magnetic field in Tesla (1 mT)
+
+# Meshgrid for 3D plotting
+eta_grid, R_grid = np.meshgrid(eta_values, R_values)
+
+# Function to calculate the damping coefficient gamma
+def calculate_gamma(eta, R):
+    return 8 * pi * eta * R**3
+
+# Calculate omega_c over the grid
+gamma_grid = calculate_gamma(eta_grid, R_grid)
+omega_c_grid = B_max / gamma_grid
+
+# 3D Surface Plot
+fig = plt.figure(figsize=(12, 8))
+ax = fig.add_subplot(111, projection='3d')
+
+# Plotting the surface with a scientific scaling on z-axis
+surf = ax.plot_surface(R_grid * 1e3, eta_grid, omega_c_grid, cmap="viridis", edgecolor='k', alpha=0.7)
+
+# Axis labels with scientific notation and title
+ax.set_xlabel("Radius R [mm]", labelpad=15)
+ax.set_ylabel("Viscosity η [Pa·s]", labelpad=15)
+ax.set_zlabel("Critical Frequency ω_c [rad/s]", labelpad=15)
+ax.set_title("Scientific Plot of Critical Frequency ω_c as a Function of Radius and Viscosity", pad=20)
+
+# Setting appropriate axis limits for a closer scientific view
+ax.set_xlim(3, 10)       # Radius in mm
+ax.set_ylim(0.001, 1.4)  # Viscosity in Pa·s
+ax.set_zscale("log")     # Use logarithmic scale for better scientific visualization
+
+# Adding color bar with scientific scale
+cbar = fig.colorbar(surf, ax=ax, shrink=0.5, aspect=10, label="Critical Frequency ω_c [rad/s]")
+cbar.formatter.set_powerlimits((0, 0))  # Force scientific notation on color bar
+cbar.update_ticks()
+
+# Rotate for an optimal view
+ax.view_init(elev=30, azim=135)
+
+plt.show()
