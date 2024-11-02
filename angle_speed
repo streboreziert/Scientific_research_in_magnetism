@@ -1,0 +1,65 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import solve_ivp
+
+# Parametri
+gamma = 0.01  # Samazināts berzes koeficients, lai radītu oscilācijas
+I = 1e-5  # Lielāks inerces moments
+m = 0.03  # Magnētiskais moments
+B = 1e-1  # Magnētiskā lauka intensitāte 1 mT
+omega_c = m * B / gamma  # Kritiskā frekvence
+
+# Gadījumi ar dažādām omega_0 vērtībām
+omega_0_case1 = 0.5 * omega_c  # omega_0 < omega_c
+omega_0_case2 = omega_c        # omega_0 = omega_c
+omega_0_case3 = 1.5 * omega_c  # omega_0 > omega_c
+
+# Diferenciālvienādojumu sistēma
+def system(t, y, gamma, I, m, B, omega_0):
+    alpha, omega = y
+    dalpha_dt = omega
+    domega_dt = - (gamma / I) * (omega - omega_0) - (m * B / I) * np.sin(alpha)
+    return [dalpha_dt, domega_dt]
+
+# Laika intervāls un sākuma nosacījumi
+t_span = (0, 50)  # Īss laika intervāls, lai redzētu svārstības sākumu
+t_eval = np.linspace(t_span[0], t_span[1], 1000)  # Augsts punktu blīvums
+initial_conditions = [0.1, 0.0]  # Sākuma leņķis un leņķiskais ātrums
+
+# Atrisināt vienādojumu katram gadījumam
+sol_case1 = solve_ivp(system, t_span, initial_conditions, args=(gamma, I, m, B, omega_0_case1), t_eval=t_eval)
+sol_case2 = solve_ivp(system, t_span, initial_conditions, args=(gamma, I, m, B, omega_0_case2), t_eval=t_eval)
+sol_case3 = solve_ivp(system, t_span, initial_conditions, args=(gamma, I, m, B, omega_0_case3), t_eval=t_eval)
+
+# Rezultāti
+alpha_case1, omega_case1 = sol_case1.y
+alpha_case2, omega_case2 = sol_case2.y
+alpha_case3, omega_case3 = sol_case3.y
+
+# Grafiks
+plt.figure(figsize=(6, 8))
+
+# Leņķa attīstība
+plt.subplot(2, 1, 1)
+plt.plot(t_eval, alpha_case1, label=r'$\omega_0 < \omega_c$', color='blue')
+plt.plot(t_eval, alpha_case2, label=r'$\omega_0 = \omega_c$', color='green')
+plt.plot(t_eval, alpha_case3, label=r'$\omega_0 > \omega_c$', color='red')
+plt.xlabel('Laiks $t$')
+plt.ylabel('Leņķis $\\alpha(t)$')
+plt.title('Leņķa $\\alpha(t)$ attīstība dažādos gadījumos ')
+plt.legend()
+plt.grid()
+
+# Leņķiskā ātruma attīstība
+plt.subplot(2, 1, 2)
+plt.plot(t_eval, omega_case1, label=r'$\omega_0 < \omega_c$', color='blue')
+plt.plot(t_eval, omega_case2, label=r'$\omega_0 = \omega_c$', color='green')
+plt.plot(t_eval, omega_case3, label=r'$\omega_0 > \omega_c$', color='red')
+plt.xlabel('Laiks $t$')
+plt.ylabel('Leņķiskais ātrums $\\omega(t)$')
+plt.title('Leņķiskā ātruma $\\omega(t)$ attīstība dažādos gadījumos')
+plt.legend()
+plt.grid()
+
+plt.tight_layout()
+plt.show()
